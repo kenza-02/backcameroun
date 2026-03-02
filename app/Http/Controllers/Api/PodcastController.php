@@ -88,10 +88,10 @@ class PodcastController extends Controller
             return response()->json(['message' => 'Fichier audio non trouvé'], 404);
         }
 
-        return response()->file(
-            Storage::disk('public')->path($podcast->fichier),
-            ['Content-Type' => 'audio/mpeg']
-        );
+        $path = Storage::disk('public')->path($podcast->fichier);
+        $mimeType = mime_content_type($path) ?: 'application/octet-stream';
+
+        return response()->file($path, ['Content-Type' => $mimeType]);
     }
     //affichage de 8 podcasts
     public function lastPodcasts()
